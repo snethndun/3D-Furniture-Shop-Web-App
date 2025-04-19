@@ -6,49 +6,53 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("add");
 
   return (
-    <div className="min-h-screen bg-white  p-6 flex items-center justify-center">
-      <div className="max-w-6xl w-full bg-white rounded-lg shadow-lg">
-        <div className="p-8">
-          {/* Dashboard Header */}
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-bold text-gray-800">
-              Admin Dashboard
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Manage your products seamlessly
-            </p>
-          </div>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white shadow-md p-6">
+        <h2 className="text-2xl font-bold text-indigo-600 mb-10">
+          Admin Panel
+        </h2>
+        <nav className="flex flex-col gap-4">
+          <button
+            onClick={() => setActiveTab("add")}
+            className={`text-left px-4 py-2 rounded-md text-lg font-medium transition ${
+              activeTab === "add"
+                ? "bg-indigo-600 text-white shadow"
+                : "text-indigo-700 hover:bg-indigo-100"
+            }`}
+          >
+            Add Product
+          </button>
+          <button
+            onClick={() => setActiveTab("view")}
+            className={`text-left px-4 py-2 rounded-md text-lg font-medium transition ${
+              activeTab === "view"
+                ? "bg-indigo-600 text-white shadow"
+                : "text-indigo-700 hover:bg-indigo-100"
+            }`}
+          >
+             View Products
+          </button>
+        </nav>
+      </aside>
 
-          {/* Tab Buttons */}
-          <div className="flex justify-center gap-8 mb-8">
-            <button
-              className={`px-6 py-3 text-lg font-medium rounded-full transition-all ${
-                activeTab === "add"
-                  ? "bg-indigo-600 text-white transform scale-105 shadow-lg"
-                  : "bg-white text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50"
-              }`}
-              onClick={() => setActiveTab("add")}
-            >
-              Add Product
-            </button>
-            <button
-              className={`px-6 py-3 text-lg font-medium rounded-full transition-all ${
-                activeTab === "view"
-                  ? "bg-indigo-600 text-white transform scale-105 shadow-lg"
-                  : "bg-white text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50"
-              }`}
-              onClick={() => setActiveTab("view")}
-            >
-              View Products
-            </button>
-          </div>
-
-          {/* Content Area */}
-          <div className="p-6 bg-white rounded-lg shadow-xl transition-all duration-300 transform hover:scale-105">
-            {activeTab === "add" ? <AddProduct /> : <ShowProduct />}
-          </div>
+      {/* Main Content */}
+      <main className="flex-1 p-10">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-800">
+            {activeTab === "add" ? "Add New Product" : "Product List"}
+          </h1>
+          <p className="text-gray-600 mt-2">
+            {activeTab === "add"
+              ? "Use the form below to add a new product."
+              : "Here are all the products you’ve added."}
+          </p>
         </div>
-      </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          {activeTab === "add" ? <AddProduct /> : <ShowProduct />}
+        </div>
+      </main>
     </div>
   );
 };

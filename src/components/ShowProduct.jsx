@@ -30,40 +30,61 @@ const ShowProduct = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">All Products</h2>
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">Product List</h2>
+
       {products.length === 0 ? (
         <p className="text-gray-600">No products available.</p>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div
-              key={product._id}
-              className="bg-white shadow rounded p-4 border border-gray-200"
-            >
-              {product.imageUrl && (
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-40 object-cover rounded mb-4"
-                />
-              )}
-              <h3 className="text-xl font-semibold text-gray-800 mb-1">
-                {product.name}
-              </h3>
-              <p className="text-sm text-gray-600 mb-2">
-                Category:{" "}
-                <span className="font-medium">{product.category}</span>
-              </p>
-              <p className="text-gray-700 mb-2">{product.description}</p>
-              <p className="font-bold text-indigo-600 mb-2">${product.price}</p>
-              <button
-                onClick={() => handleDelete(product._id)}
-                className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+          <table className="min-w-full text-left">
+            <thead>
+              <tr className="bg-indigo-600 text-white text-sm uppercase">
+                <th className="px-6 py-4">Image</th>
+                <th className="px-6 py-4">Name</th>
+                <th className="px-6 py-4">Category</th>
+                <th className="px-6 py-4">Description</th>
+                <th className="px-6 py-4">Price</th>
+                <th className="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 text-sm">
+              {products.map((product) => (
+                <tr key={product._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    ) : (
+                      <span className="text-gray-400 italic">No image</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 font-semibold text-gray-800">
+                    {product.name}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">
+                    {product.category}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600 truncate max-w-xs">
+                    {product.description}
+                  </td>
+                  <td className="px-6 py-4 font-bold text-indigo-600">
+                    ${product.price}
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

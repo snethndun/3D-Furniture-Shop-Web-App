@@ -5,6 +5,10 @@ import FurnitureModel from "../components/FurnitureModel";
 import ProductCard from "../components/ProductCard";
 import CategorySection from "../components/category";
 import { FaStar, FaPaintBrush, FaTruck } from "react-icons/fa";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Bounds } from "@react-three/drei";
+import { Suspense } from "react";
+import ModelViewer from "../components/ModelViwer";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -28,6 +32,16 @@ const Home = () => {
 
     fetchProducts();
   }, []);
+
+  
+  const models = [
+    { name: "Chair", path: "/chair.glb" },
+    { name: "Table", path: "/table.glb" },
+    { name: "Lamp", path: "/lamp.glb" },
+  ];
+
+  const [selectedModel, setSelectedModel] = useState(models[0].path); // Set initial model
+
 
   return (
     <div className="bg-white min-h-screen flex flex-col">
@@ -65,6 +79,40 @@ const Home = () => {
 
       {/* Category Section */}
       <CategorySection />
+      <section className="h-[600px] bg-gray-900 text-white px-6 md:px-20 flex items-center justify-center">
+        <div className="w-full max-w-5xl flex flex-col items-center">
+          {/* 3D Model Viewer */}
+          <div className="w-full h-[350px] md:h-[400px]">
+            <Canvas camera={{ position: [0, 2, 5], fov: 45 }}>
+              <ambientLight intensity={0.7} />
+              <directionalLight position={[5, 5, 5]} intensity={1.2} />
+              <Suspense fallback={null}>
+                <Bounds fit clip observe margin={1.2}>
+                  <ModelViewer modelPath={selectedModel} />
+                </Bounds>
+              </Suspense>
+              <OrbitControls makeDefault enableZoom enablePan autoRotate />
+            </Canvas>
+          </div>
+
+          {/* Model Buttons */}
+          <div className="flex justify-center gap-4 mt-6 flex-wrap">
+            {models.map((model, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedModel(model.path)}
+                className={`px-4 py-2 rounded-md border-2 text-white transition ${
+                  selectedModel === model.path
+                    ? "border-indigo-500 bg-indigo-600"
+                    : "border-white hover:bg-gray-900 hover:text-gray-400"
+                }`}
+              >
+                {model.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="bg-white py-20 px-8 md:px-20">

@@ -6,6 +6,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import productRoutes from "./routes/ProductRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+
+
 
 // Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -36,6 +39,9 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json());
+
+
+app.use("/api/auth", authRoutes);
 
 // ✅ Serve static files correctly
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

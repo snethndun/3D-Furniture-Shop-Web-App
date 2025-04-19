@@ -6,7 +6,11 @@ const FurnitureModel = ({ modelUrl }) => {
   const { scene } = useGLTF(modelUrl);
 
   return (
-    <Canvas style={{ height: "400px", width: "100%" }}>
+    <Canvas
+      style={{ height: "100%", width: "100%", background: "transparent" }}
+      camera={{ position: [0, 2, 5], fov: 50 }}
+      gl={{ alpha: true, preserveDrawingBuffer: true }}
+    >
       <ambientLight intensity={0.5} />
       <spotLight
         position={[12, 10, 10]}
@@ -15,8 +19,8 @@ const FurnitureModel = ({ modelUrl }) => {
         castShadow
       />
 
-      {/* Add environment lighting */}
-      <Environment preset="city" />
+      {/* Disable HDRI background */}
+      <Environment preset="city" background={false} />
 
       <Center>
         <primitive object={scene} />
