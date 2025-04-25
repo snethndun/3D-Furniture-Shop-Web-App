@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/Admin-Dashboard";
 import ShopPage from "./pages/ShopPage";
 import ProductDetailPage from "./pages/SingleProductPage";
 import LoginModal from "./components/LoginModal";
+import ThreeDRoomPage from "./pages/ThreeDRoom";
 
 const App = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/shop" element={<ShopPage />} />
+          <Route path="/3D" element={<ThreeDRoomPage />} />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
           <Route
             path="/login"
@@ -37,8 +39,7 @@ const App = () => {
             }
           />
         </Routes>
-        {/* Optionally, you can add a button to open the modal */}
-        <button onClick={openLoginModal}>Open Login Modal</button>
+       
       </Router>
     </CartProvider>
   );

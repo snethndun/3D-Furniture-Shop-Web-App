@@ -9,7 +9,6 @@ import productRoutes from "./routes/ProductRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 
-
 // Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -40,9 +39,6 @@ const upload = multer({ storage });
 app.use(cors());
 app.use(express.json());
 
-
-app.use("/api/auth", authRoutes);
-
 // ✅ Serve static files correctly
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -65,6 +61,7 @@ app.post(
 );
 
 app.use("/api/products", productRoutes);
+app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(MONGODB_URI)
