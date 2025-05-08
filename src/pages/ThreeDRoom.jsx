@@ -4,8 +4,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 
-const ROOM_SIZE = 20; // Increased from 12 to 20 for larger room
-const ROOM_HEIGHT = 6; // Increased from 4 to 6 for taller room
+const ROOM_SIZE = 20;
+const ROOM_HEIGHT = 6;
 
 const models = [
   {
@@ -59,7 +59,6 @@ const ThreeDRoom = () => {
   const controlsRef = useRef(null);
   const transformControlsRef = useRef(null);
   const draggableObjectsRef = useRef([]);
-  const moveIconsRef = useRef([]);
   const [error, setError] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
   const [placedModels, setPlacedModels] = useState([]);
@@ -104,21 +103,6 @@ const ThreeDRoom = () => {
 
             fitModelToRoom(model, 1.2);
             group.position.set(...position);
-
-            const moveIcon = new THREE.Mesh(
-              new THREE.CircleGeometry(0.2, 32),
-              new THREE.MeshBasicMaterial({
-                color: 0x007bff,
-                transparent: true,
-                opacity: 0.8,
-                side: THREE.DoubleSide,
-              })
-            );
-            moveIcon.position.copy(group.position);
-            moveIcon.position.y += 1;
-            moveIcon.lookAt(cameraRef.current.position);
-            sceneRef.current.add(moveIcon);
-            moveIconsRef.current.push({ model: group, icon: moveIcon });
 
             model.traverse((child) => {
               if (child.isMesh) {
@@ -170,10 +154,10 @@ const ThreeDRoom = () => {
     };
     let { width, height } = getContainerSize();
 
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 2000); // Adjusted near and far planes
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    camera.position.set(ROOM_SIZE * 0.4, ROOM_HEIGHT * 0.5, ROOM_SIZE * 0.4); // Camera inside room
-    camera.lookAt(0, ROOM_HEIGHT * 0.3, 0);
+    camera.position.set(ROOM_SIZE / 2 - 1, 2, 0); // Near right wall, eye level
+    camera.lookAt(0, 2, 0); // Look at room center at eye level
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -188,13 +172,13 @@ const ThreeDRoom = () => {
     controlsRef.current = controls;
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
-    controls.target.set(0, ROOM_HEIGHT * 0.3, 0);
+    controls.target.set(0, 2, 0); // Target room center at eye level
     controls.enablePan = true;
     controls.enableZoom = true;
     controls.minDistance = 1;
-    controls.maxDistance = ROOM_SIZE * 3; // Increased for larger room
+    controls.maxDistance = ROOM_SIZE * 1.5;
     controls.minPolarAngle = 0.1;
-    controls.maxPolarAngle = Math.PI / 2;
+    controls.maxPolarAngle = Math.PI / 2 - 0.1;
     controls.rotateSpeed = 0.7;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -390,13 +374,6 @@ const ThreeDRoom = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-
-      moveIconsRef.current.forEach(({ model, icon }) => {
-        icon.position.copy(model.position);
-        icon.position.y += 1;
-        icon.lookAt(camera.position);
-      });
-
       renderer.render(scene, camera);
     };
     animate();
@@ -410,10 +387,6 @@ const ThreeDRoom = () => {
       renderer.domElement.removeEventListener("pointerup", onPointerUp);
       renderer.dispose();
       scene.clear();
-      moveIconsRef.current.forEach(({ icon }) => {
-        scene.remove(icon);
-      });
-      moveIconsRef.current = [];
       sceneRef.current = null;
       if (transformControlsRef.current) {
         transformControlsRef.current.detach();
@@ -767,14 +740,6 @@ const ThreeDRoom = () => {
                           );
                           if (object) {
                             sceneRef.current.remove(object);
-                            moveIconsRef.current = moveIconsRef.current.filter(
-                              (item) => item.model !== object
-                            );
-                            sceneRef.current.remove(
-                              moveIconsRef.current.find(
-                                (item) => item.model === object
-                              )?.icon
-                            );
                             draggableObjectsRef.current =
                               draggableObjectsRef.current.filter(
                                 (obj) => obj !== object
