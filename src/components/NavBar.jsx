@@ -60,6 +60,9 @@ const Navbar = () => {
           <Link to="/contact" className="hover:text-indigo-600">
             Contact
           </Link>
+          <Link to="/3D" className="hover:text-indigo-600">
+            3D Room
+          </Link>
         </nav>
 
         {/* Right Side Buttons */}
